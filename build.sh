@@ -30,6 +30,11 @@ if command -v hb-view >/dev/null; then
 fi
 
 if [[ "${1:-}" == "--install" ]]; then
-  cp "$out"/*.ttf "$HOME/Library/Fonts/"
+  # Copy then rename, never overwrite in place: running apps mmap the installed
+  # fonts, and truncating a mapped file segfaults them (WezTerm died in FreeType).
+  for f in "$out"/*.ttf; do
+    dest="$HOME/Library/Fonts/$(basename "$f")"
+    cp "$f" "$dest.tmp" && mv -f "$dest.tmp" "$dest"
+  done
   echo "Installed to ~/Library/Fonts. Restart your editor/terminal to pick it up."
 fi
