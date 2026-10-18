@@ -9,7 +9,6 @@ spacing = "normal"     # normal | term | fontconfig-mono | fixed (no ligatures)
 serifs = "sans"        # sans | slab
 noCvSs = true          # bake the choices below in rather than exposing cv##/ss## features
 exportGlyphNames = false
-noLigation = true      # Spot has none; delete this line to get ligatures (-> => != ...), tuned by [ligations] below
 
 [buildPlans.MoteMono.variants]
 inherits = "ss14"
@@ -35,9 +34,14 @@ brace = "curly"
 l = "tailed"
 i = "tailed"
 
+# Arrows only: -> => <- --> |> become joined shapes; comparisons and equality stay as typed.
+# Add noLigation = true to the top section to remove ligatures entirely,
+# or set harfbuzz_features = { "calt=0" } in WezTerm to switch them off there.
 [buildPlans.MoteMono.ligations]
 inherits = "default-calt"
-disables = []          # e.g. ["eqeq", "lteq", "gteq"] to keep some operators literal
+disables = ["lteq", "gteq", "exeq", "eqeq", "eqeqeq", "exeqeqeq", "exeqeq"]
+# without these, disabling lteq/gteq lets the arrow ligatures turn <= into ⇐
+enables = ["lteq-separate", "gteq-separate"]
 
 # Spot Mono's vertical metrics, measured from SpotMono.ttc (1000 upm, 600 advance).
 # Iosevka draws taller letters in its cell (cap 735, x 520); Spot's small letters
