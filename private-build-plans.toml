@@ -1,0 +1,91 @@
+# Iosevka build plan for Mote Mono: Spot Mono's proportions and letterforms,
+# plus what Spot lacks for coding (italics, Light, box drawing, powerline, wide symbol coverage).
+# Every option: tmp/iosevka/doc/custom-build.md (after the first ./build.sh)
+# Visual picker: https://be5invis.github.io/Iosevka/customizer
+
+[buildPlans.MoteMono]
+family = "Mote Mono"
+spacing = "normal"     # normal | term | fontconfig-mono | fixed (no ligatures)
+serifs = "sans"        # sans | slab
+noCvSs = true          # bake the choices below in rather than exposing cv##/ss## features
+exportGlyphNames = false
+noLigation = true      # Spot has none; delete this line to get ligatures (-> => != ...), tuned by [ligations] below
+
+[buildPlans.MoteMono.variants]
+inherits = "ss14"
+
+# Letterforms matched to Spot Mono
+[buildPlans.MoteMono.variants.design]
+zero = "oval-dotted"
+one = "base"
+capital-i = "serifed"
+l = "tailed-serifed"
+i = "serifed"
+r = "serifed"
+y = "straight-turn-serifless"
+g = "single-storey-serifless"
+asterisk = "hex-high"
+f = "serifed"
+j = "serifed"
+paren = "large-contour"
+brace = "curly"
+
+# Italic-only overrides
+[buildPlans.MoteMono.variants.italic]
+l = "tailed"
+i = "tailed"
+
+[buildPlans.MoteMono.ligations]
+inherits = "default-calt"
+disables = []          # e.g. ["eqeq", "lteq", "gteq"] to keep some operators literal
+
+# Spot Mono's vertical metrics, measured from SpotMono.ttc (1000 upm, 600 advance).
+# Iosevka draws taller letters in its cell (cap 735, x 520); Spot's small letters
+# in a wide, tall cell are most of what makes it feel open.
+[buildPlans.MoteMono.metricOverride]
+cap = 588
+xHeight = 440
+ascender = 653
+leading = 1400         # Spot: ascent 1050 + descent 340 + gap 10
+symbolMid = 282        # centre of the hyphen
+parenSize = 876
+archDepth = "default_archDepth * 0.8"
+smallArchDepth = "default_smallArchDepth * 0.85"
+
+[buildPlans.MoteMono.weights.Light]
+shape = 300
+menu = 300
+css = 300
+
+[buildPlans.MoteMono.weights.Regular]
+shape = 400
+menu = 400
+css = 400
+
+# Medium and Bold shapes are heavier than their names so stems match Spot's (measured).
+[buildPlans.MoteMono.weights.Medium]
+shape = 610
+menu = 500
+css = 500
+
+[buildPlans.MoteMono.weights.Bold]
+shape = 810
+menu = 700
+css = 700
+
+[buildPlans.MoteMono.slopes.Upright]
+angle = 0
+shape = "upright"
+menu = "upright"
+css = "normal"
+
+[buildPlans.MoteMono.slopes.Italic]
+angle = 9.4
+shape = "italic"
+menu = "italic"
+css = "italic"
+
+[buildPlans.MoteMono.widths.Normal]
+shape = 600            # Spot's advance width
+menu = 5
+css = "normal"

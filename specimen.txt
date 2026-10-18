@@ -1,0 +1,25 @@
+Look-alikes
+  0O0o  1lI|i!  5S  2Z  8B  6b  9g  rnm  cl d  vv w  ` ' "  ,.;:
+  il1| O0Q  {[()]}  <> /\  -_~=  *#@&%$^
+
+Ligature bait
+  -> => <- <= >= != !== === == :: ... // /* */ || && |> <|
+
+Code
+  fn parse(input: &str) -> Result<Vec<u8>, Error> {
+      let x0 = input.len() * 0x1F + 1_000;
+      if x0 >= 10 && flag != Il1 { return Ok(vec![]); }
+  }
+  const total = items.reduce((acc, { qty, price }) => acc + qty * price, 0);
+  ~/.config/fish/config.fish  $HOME  @user  #tag  50% ^C
+
+Box drawing
+  ┌──┬──┐ ╭──╮
+  │  │  │ │  │
+  └──┴──┘ ╰──╯  ░▒▓█
+
+Alphabet
+  ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  abcdefghijklmnopqrstuvwxyz
+  0123456789
+  The quick brown fox jumps over the lazy dog.
