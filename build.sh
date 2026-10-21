@@ -14,6 +14,12 @@ fi
 
 cp "$root/private-build-plans.toml" "$src/private-build-plans.toml"
 
+# Round curves like Spot's: superness 2 is a true ellipse, Iosevka's default 2.275 is
+# squarer. It isn't a build-plan option, so patch the source (idempotent).
+aesthetics="$src/packages/font-glyphs/src/meta/aesthetics.ptl"
+sed -i '' -E 's/^(	superness +)[0-9.]+$/\12.0/' "$aesthetics"
+grep -qE '^	superness +2\.0$' "$aesthetics" || { echo "superness patch failed: Iosevka source moved" >&2; exit 1; }
+
 cd "$src"
 [[ -d node_modules ]] || npm ci
 # Unhinted is fine on macOS; hinting needs ttfautohint and only matters on Windows.

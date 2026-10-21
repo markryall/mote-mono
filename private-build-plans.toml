@@ -60,8 +60,8 @@ ascender = 653
 leading = 1400         # Spot: ascent 1050 + descent 340 + gap 10
 symbolMid = 282        # centre of the hyphen
 parenSize = 876
-archDepth = "default_archDepth * 0.8"
-smallArchDepth = "default_smallArchDepth * 0.85"
+archDepth = "default_archDepth * 1.15"
+smallArchDepth = "default_smallArchDepth * 1.1"
 
 [buildPlans.MoteMono.weights.Light]
 shape = 300
