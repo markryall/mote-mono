@@ -14,11 +14,16 @@ fi
 
 cp "$root/private-build-plans.toml" "$src/private-build-plans.toml"
 
-# Round curves like Spot's: superness 2 is a true ellipse, Iosevka's default 2.275 is
-# squarer. It isn't a build-plan option, so patch the source (idempotent).
-aesthetics="$src/packages/font-glyphs/src/meta/aesthetics.ptl"
-sed -i '' -E 's/^(	superness +)[0-9.]+$/\12.0/' "$aesthetics"
-grep -qE '^	superness +2\.0$' "$aesthetics" || { echo "superness patch failed: Iosevka source moved" >&2; exit 1; }
+# Source changes the build plan can't express live in patches/*.patch
+# (make one with: git -C tmp/iosevka diff -- <files> > patches/name.patch).
+# Skip a patch that's already applied; stop if one no longer fits Iosevka's source.
+for p in "$root"/patches/*.patch; do
+  [[ -e "$p" ]] || continue
+  if git -C "$src" apply --reverse --check "$p" 2>/dev/null; then
+    continue
+  fi
+  git -C "$src" apply "$p" || { echo "patch $(basename "$p") no longer applies to Iosevka" >&2; exit 1; }
+done
 
 cd "$src"
 [[ -d node_modules ]] || npm ci
@@ -28,6 +33,11 @@ npm run build -- "ttf-unhinted::$plan"
 out="$src/dist/$plan/TTF-Unhinted"
 echo "Built: $out"
 ls "$out"
+
+# Iosevka only draws square stroke ends; round them like Spot's (round-corners.py).
+venv="$root/tmp/venv"
+[[ -x "$venv/bin/python" ]] || { python3 -m venv "$venv" && "$venv/bin/pip" install -q fonttools; }
+"$venv/bin/python" "$root/round-corners.py" "$out"/*.ttf
 
 if command -v hb-view >/dev/null; then
   hb-view --font-size=28 --margin=24 --background=#1e1e2e --foreground=#cdd6f4 \

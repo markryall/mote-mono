@@ -1,0 +1,13 @@
+diff --git a/packages/font-glyphs/src/meta/aesthetics.ptl b/packages/font-glyphs/src/meta/aesthetics.ptl
+index 8e0657d..30a6ed8 100644
+--- a/packages/font-glyphs/src/meta/aesthetics.ptl
++++ b/packages/font-glyphs/src/meta/aesthetics.ptl
+@@ -371,7 +371,7 @@ export : define DesignParameters : object
+ 	# Fine adjustments
+ 	aBarStrokeAdj              (-0.075)
+ 	fbarStrokeAdj              0.25
+-	superness                  2.275
++	superness                  2.0
+ 	tightHookSuperness         2.30
+ 	rHookSuperness             2.35
+ 	# Serif creation
