@@ -34,14 +34,21 @@ brace = "curly"
 l = "tailed"
 i = "tailed"
 
-# Arrows only: -> => <- --> |> become joined shapes; comparisons and equality stay as typed.
+# Everything on, to try out: dlig is Iosevka's fullest set (arrows, counter-arrows,
+# == != <= >=, logic /\ \/, {| |] (* *), markdown checkboxes, -- ++ chains, centred ops),
+# plus the extra groups below. Names for disables are in tmp/iosevka/params/ligation-set.toml.
+# To keep <= and >= literal, disable lteq/gteq and enable lteq-separate/gteq-separate,
+# otherwise the arrow ligatures turn <= into ⇐.
 # Add noLigation = true to the top section to remove ligatures entirely,
 # or set harfbuzz_features = { "calt=0" } in WezTerm to switch them off there.
 [buildPlans.MoteMono.ligations]
-inherits = "default-calt"
-disables = ["lteq", "gteq", "exeq", "eqeq", "eqeqeq", "exeqeqeq", "exeqeq"]
-# without these, disabling lteq/gteq lets the arrow ligatures turn <= into ⇐
-enables = ["lteq-separate", "gteq-separate"]
+inherits = "dlig"
+disables = []
+# ltgt-ne (<> as ≠) is left out: it fights ltgt-diamond-tag for <>
+enables = [
+  "eqeqeq", "exeqeq", "eqexeq", "slasheq", "eqslasheq", "tildeeq",
+  "llggeq", "colon-greater-as-colon-arrow",
+]
 
 # Spot Mono's vertical metrics, measured from SpotMono.ttc (1000 upm, 600 advance).
 # Iosevka draws taller letters in its cell (cap 735, x 520); Spot's small letters
