@@ -2,7 +2,17 @@
 # Build Mote Mono from private-build-plans.toml and optionally install it.
 #   ./build.sh            build unhinted TTFs into tmp/iosevka/dist/MoteMono
 #   ./build.sh --install  ...and copy them into ~/Library/Fonts
+#   ./build.sh --release  ...and publish them as a GitHub release, tagged with the plan's version
 set -euo pipefail
+
+install=false release=false
+for arg in "$@"; do
+  case "$arg" in
+    --install) install=true ;;
+    --release) release=true ;;
+    *) echo "usage: $0 [--install] [--release]" >&2; exit 2 ;;
+  esac
+done
 
 root="$(cd "$(dirname "$0")" && pwd)"
 src="$root/tmp/iosevka"
@@ -45,7 +55,7 @@ if command -v hb-view >/dev/null; then
   echo "Preview: $root/tmp/specimen.png"
 fi
 
-if [[ "${1:-}" == "--install" ]]; then
+if $install; then
   # Copy then rename, never overwrite in place: running apps mmap the installed
   # fonts, and truncating a mapped file segfaults them (WezTerm died in FreeType).
   for f in "$out"/*.ttf; do
@@ -53,4 +63,17 @@ if [[ "${1:-}" == "--install" ]]; then
     cp "$f" "$dest.tmp" && mv -f "$dest.tmp" "$dest"
   done
   echo "Installed to ~/Library/Fonts. Restart your editor/terminal to pick it up."
+fi
+
+if $release; then
+  version="$(sed -n 's/^version = "\(.*\)"/\1/p' "$root/private-build-plans.toml")"
+  tag="v$version"
+  # Release the commit the fonts were built from; GitHub refuses one that isn't pushed.
+  commit="$(git -C "$root" rev-parse HEAD)"
+  zip="$root/tmp/$plan-$version.zip"
+  rm -f "$zip"
+  zip -j "$zip" "$out"/*.ttf "$root/LICENSE.md"
+  gh release create "$tag" "$zip" --repo markryall/mote-mono --target "$commit" \
+    --title "Mote Mono $version" \
+    --notes "Mote Mono $version: Light, Regular, Medium and Bold, each with an italic. Unzip and install the .ttf files; see the README for details."
 fi
