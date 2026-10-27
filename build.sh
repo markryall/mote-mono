@@ -2,7 +2,8 @@
 # Build Mote Mono from private-build-plans.toml and optionally install it.
 #   ./build.sh            build unhinted TTFs into tmp/iosevka/dist/MoteMono
 #   ./build.sh --install  ...and copy them into ~/Library/Fonts
-#   ./build.sh --release  ...and publish them as a GitHub release, tagged with the plan's version
+#   ./build.sh --release  ...and publish them as a GitHub release, tagged with the plan's version,
+#                         then point the font-mote-mono cask in markryall/homebrew-tap at it
 set -euo pipefail
 
 install=false release=false
@@ -76,4 +77,19 @@ if $release; then
   gh release create "$tag" "$zip" --repo markryall/mote-mono --target "$commit" \
     --title "Mote Mono $version" \
     --notes "Mote Mono $version: Light, Regular, Medium and Bold, each with an italic. Unzip and install the .ttf files; see the README for details."
+
+  # Bump the Homebrew cask to the zip just uploaded (same bytes, so same checksum).
+  tap="$root/tmp/homebrew-tap"
+  cask="$tap/Casks/font-mote-mono.rb"
+  if [[ -d "$tap" ]]; then
+    jj -R "$tap" git fetch
+    jj -R "$tap" new main@origin
+  else
+    jj git clone git@github.com:markryall/homebrew-tap.git "$tap"
+  fi
+  sha="$(shasum -a 256 "$zip" | cut -d' ' -f1)"
+  sed -i '' -e "s/^  version \".*\"/  version \"$version\"/" -e "s/^  sha256 \".*\"/  sha256 \"$sha\"/" "$cask"
+  jj -R "$tap" describe -m "font-mote-mono $version"
+  jj -R "$tap" bookmark set main -r @
+  jj -R "$tap" git push -b main
 fi

@@ -9,7 +9,14 @@ to Bold weights, ligatures, box drawing, powerline glyphs and Iosevka's full sym
 
 ## Install
 
-Download the zip from the [latest release](https://github.com/markryall/mote-mono/releases/latest)
+On macOS with Homebrew:
+
+```sh
+brew trust markryall/tap
+brew install --cask markryall/tap/font-mote-mono
+```
+
+Or download the zip from the [latest release](https://github.com/markryall/mote-mono/releases/latest)
 and unzip it. Then:
 
 - **macOS**: double-click each `.ttf` and choose Install, or copy them into `~/Library/Fonts`.
